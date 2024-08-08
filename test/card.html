@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div class="card">
+    <div style="flex: 1; display: flex">
+        <div class="logo" style="flex: 1"></div>
+        <div style="flex: 2; display: flex; flex-direction: column; text-align: end; font-size: 16px">
+            <div>Personal Profile</div>
+            <div>个人信息</div>
+        </div>
+    </div>
+    <div style="flex: 1; display: flex; align-items: center">
+        <div class="avatar"></div>
+        <div style="height: 100%; justify-content: center; flex: 1; display: flex; flex-direction: column;">
+            <div style="font-size: 12px; font-weight: normal">USERNAME</div>
+            <div style="font-size: 36px">yours name</div>
+        </div>
+    </div>
+    <div style="flex: 2; display: flex;">
+        <div style="flex: 1; display: flex; flex-direction: column; text-align: start; justify-content: center">
+            <div style="font-size: 16px; font-weight: normal">Max Rating</div>
+            <div style="font-size: 32px">1344</div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; text-align: end; justify-content: start">
+            <div style="font-size: 16px; font-weight: normal">Contest Rating</div>
+            <div style="font-size: 72px;">1344</div>
+        </div>
+    </div>
+</div>
+</body>
+
+<style>
+
+    body {
+      font-family: "思源黑体 CN", Tahoma, Verdana, STHeiTi, simsun, sans-serif;
+    }
+
+    .card {
+        width: calc(200px * 2);
+        height: calc(124px * 2);
+        border-radius: 15px;
+        margin: 0;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(to top right, #DCF190, #7EB712);
+        color: #FFFFFF;
+        font-weight: bold;
+    }
+
+    .logo {
+
+        width: 100px;
+        height: 31px;
+
+        background-image: url("./codeforces Logo Vector.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .avatar {
+
+        width: 80px;
+        height: 80px;
+        border-radius: 40px;
+        margin: 10px;
+
+        background-image: url("https://userpic.codeforces.org/2261067/avatar/7e1b81539b942ca7.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+</style>
+</html>
