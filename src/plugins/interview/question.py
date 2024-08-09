@@ -61,7 +61,7 @@ class Question(metaclass=SingletonMeta):
 
         def get_random_tags(self) -> str:
             tags = self.get_tag_category()
-            return random.sample(tags, k=random.randint(0, len(tags)))
+            return random.choice(tags)
 
     class BankItem:
         def __init__(self, title, tagList, questions):
