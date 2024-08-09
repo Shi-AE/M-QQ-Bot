@@ -3,15 +3,14 @@ from http.client import HTTPConnection
 
 import requests
 from nonebot import require
-
 from nonebot.log import logger
 
 require("nonebot_plugin_apscheduler")
 from nonebot_plugin_apscheduler import scheduler
 
-HTTPConnection.debuglevel = 0
+HTTPConnection.debuglevel = 1
 
-cf_base_api = 'https://codeforces.com/'
+cf_base_api = 'https://mirror.codeforces.com/'
 problems_api = 'api/problemset.problems'
 
 
@@ -29,9 +28,13 @@ class Problem(metaclass=SingletonMeta):
         self.__problem: list = []
         self.update()
 
-    @scheduler.scheduled_job("cron", hour=3, args=[1])
     def update(self) -> None:
-        response = requests.get(f'{cf_base_api}/{problems_api}')
+        response = requests.get(
+            f'{cf_base_api}/{problems_api}',
+            headers={
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+            }
+        )
 
         if response.status_code != 200:
             return
@@ -48,10 +51,8 @@ class Problem(metaclass=SingletonMeta):
         logger.info("cf problems 定时更新完成")
 
     def get_problems(self) -> list:
-        i = 0
-        while i < 3 and len(self.__problem) <= 10:
+        if len(self.__problem) <= 10:
             self.update()
-            i += 1
 
         return self.__problem
 
@@ -79,3 +80,11 @@ class Problem(metaclass=SingletonMeta):
             return None
 
         return random.choice(temp_problems)
+
+
+@scheduler.scheduled_job("cron", hour=3)
+def _():
+    try:
+        Problem().update()
+    except Exception as e:
+        logger.error(e)

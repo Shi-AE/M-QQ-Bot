@@ -30,9 +30,9 @@ from nonebot_plugin_htmlrender import (  # type: ignore[import-untyped] # noqa: 
 Bot_NICKNAME = list(nonebot.get_driver().config.nickname)
 Bot_NICKNAME = Bot_NICKNAME[0] if Bot_NICKNAME else "脑积水"
 
-HTTPConnection.debuglevel = 0
+HTTPConnection.debuglevel = 1
 
-cf_base_api = 'https://codeforces.com/'
+cf_base_api = 'https://mirror.codeforces.com/'
 user_info_api = 'api/user.info'
 profile_api = 'profile'
 contest_api = "api/contest.list"
@@ -102,7 +102,12 @@ def get_color(rating: int):
 async def getCodeforcesUserSolvedNumber(handle: str) -> int:
     try:
         url = f"{cf_base_api}/{profile_api}/{handle}"
-        response = requests.get(url).text
+        response = requests.get(
+            url,
+            headers={
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+            }
+        ).text
         tree: etree._Element = etree.HTML(response, None)
         result: list[etree._Element] = tree.xpath(
             "//div[@class='_UserActivityFrame_footer']/div/div/div/text()")
@@ -116,6 +121,9 @@ async def qurye_info(cf_userid):
     try:
         response = requests.get(
             f'{cf_base_api}/{user_info_api}',
+            headers={
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+            },
             params={
                 'handles': cf_userid,
                 'checkHistoricHandles': False
@@ -195,7 +203,10 @@ async def _():
         response = requests.get(
             f'{cf_base_api}/{contest_api}',
             params={'gym': False},
-            timeout=(5, 10)
+            timeout=(5, 10),
+            headers={
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+            }
         )
 
         data = response.json()

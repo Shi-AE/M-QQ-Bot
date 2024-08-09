@@ -14,7 +14,7 @@ interview_base_api = 'https://api.mianshiya.com/'
 tag_api = 'api/tagCategory/list'
 bank_api = 'api/question_bank/list/page/vo'
 
-HTTPConnection.debuglevel = 0
+HTTPConnection.debuglevel = 1
 
 
 class SingletonMeta(type):
@@ -36,10 +36,15 @@ class Question(metaclass=SingletonMeta):
             self.__tag_category: list[str] = []
             self.update()
 
-        @scheduler.scheduled_job("cron", hour=3, args=[1])
         def update(self) -> None:
 
-            response = requests.post(f'{interview_base_api}/{tag_api}', json={'current': 1})
+            response = requests.post(
+                f'{interview_base_api}/{tag_api}',
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+                },
+                json={'current': 1}
+            )
             response_data = response.json()
 
             data: list = response_data.get('data', [])
@@ -50,8 +55,7 @@ class Question(metaclass=SingletonMeta):
             logger.info("interview TagCategory 定时更新完成")
 
         def get_tag_category(self) -> list[str]:
-            i = 0
-            while i < 3 and len(self.__tag_category) < 3:
+            if len(self.__tag_category) < 3:
                 self.update()
             return self.__tag_category
 
@@ -73,7 +77,12 @@ class Question(metaclass=SingletonMeta):
         @staticmethod
         def get_questions(item_id) -> list[dict]:
             time.sleep(random.randint(2, 4))
-            response = requests.get(f'https://www.mianshiya.com/bank/{item_id}/question/')
+            response = requests.get(
+                f'https://www.mianshiya.com/bank/{item_id}/question/',
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+                }
+            )
             text = response.text
             tree: etree._Element = etree.HTML(text)
             li_list: list[etree._Element] = tree.xpath(
@@ -91,9 +100,14 @@ class Question(metaclass=SingletonMeta):
 
             return questions
 
-        @scheduler.scheduled_job("cron", hour=3, args=[1])
         def update(self) -> None:
-            response = requests.post(f'{interview_base_api}/{bank_api}', json={'current': 1, 'pageSize': 1000})
+            response = requests.post(
+                f'{interview_base_api}/{bank_api}',
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+                },
+                json={'current': 1, 'pageSize': 1000}
+            )
             response_data = response.json()
 
             records: list = response_data.get('data', {}).get('records', [])
@@ -110,8 +124,7 @@ class Question(metaclass=SingletonMeta):
             logger.info("interview QuestionBank 定时更新完成")
 
         def get_question_Bank(self) -> list:
-            i = 0
-            while i < 3 and len(self.__question_bank) < 3:
+            if len(self.__question_bank) < 3:
                 self.update()
             return self.__question_bank
 
@@ -136,3 +149,12 @@ class Question(metaclass=SingletonMeta):
                 'tags': bank_item.tagList,
                 'href': f"https://www.mianshiya.com/{question['href']}"
             }
+
+
+@scheduler.scheduled_job("cron", hour=3)
+def _():
+    try:
+        Question().TagCategory().update()
+        Question().QuestionBank().update()
+    except Exception as e:
+        logger.error(e)
