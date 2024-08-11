@@ -330,7 +330,7 @@ async def wordleStart(args: Message = CommandArg()):
     fdict.close()
     for i in range(len(dictionary)):
         dictionary[i] = ((dictionary[i].split())[0]).lower()
-    await start.send("bot: Word Found")
+    await start.send(f"bot: Word Found. limited times {config.try_limit}")
 
 
 @guess.handle()

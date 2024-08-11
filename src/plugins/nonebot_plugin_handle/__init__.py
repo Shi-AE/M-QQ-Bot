@@ -122,7 +122,7 @@ async def stop_game_timeout(matcher: Matcher, user_id: str):
         await matcher.finish(msg)
 
 
-def set_timeout(matcher: Matcher, user_id: str, timeout: float = 300):
+def set_timeout(matcher: Matcher, user_id: str, timeout: float = 600):
     if timer := timers.get(user_id, None):
         timer.cancel()
     loop = asyncio.get_running_loop()

@@ -61,7 +61,7 @@ async def _handle(matcher: Matcher, city: Message = CommandArg()):
 
 
 @wettr.got('city', prompt='你想夸赞谁呢？')
-async def _(city: str = ArgPlainText('city')):
+async def _(city: str = ArgStr('city')):
     if city in ['我']:
         await wettr.send(f'你太菜了', at_sender=True)
     elif city == 'syx' or '电闸' in city:
