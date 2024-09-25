@@ -7,7 +7,7 @@ from nonebot.exception import ParserExit
 from nonebot.params import ShellCommandArgs
 from nonebot.rule import Namespace, ArgumentParser
 
-from src.plugins.interview.question import Question
+from src.disabled.interview.question import Question
 
 # 载入bot名字
 Bot_NICKNAME = list(nonebot.get_driver().config.nickname)

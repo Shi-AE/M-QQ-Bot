@@ -151,7 +151,7 @@ class Question(metaclass=SingletonMeta):
             }
 
 
-@scheduler.scheduled_job("cron", hour=3)
+# @scheduler.scheduled_job("cron", hour=3)
 def _():
     try:
         Question().TagCategory().update()

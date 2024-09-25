@@ -8,6 +8,7 @@
 import hashlib
 import json
 import random
+import re
 import time
 import urllib
 
@@ -62,10 +63,14 @@ async def _handle(matcher: Matcher, city: Message = CommandArg()):
 
 @wettr.got('city', prompt='你想夸赞谁呢？')
 async def _(city: str = ArgStr('city')):
+    pattern = r"name=@(.+?)\]"
+    match = re.search(pattern, city)
+    if match:
+        city = match.group(1)
     if city in ['我']:
         await wettr.send(f'你太菜了', at_sender=True)
     elif city == 'syx' or '电闸' in city:
-        await wettr.send(f'{city}太菜了')
+        await wettr.send(f'{city} 太菜了')
     else:
         await wettr.send(f'{city} tql!')
 

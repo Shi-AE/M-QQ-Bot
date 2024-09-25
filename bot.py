@@ -37,12 +37,11 @@ except Exception as e:
 
 # 初始化题目
 from src.plugins.codeforces.problem import Problem
-from src.plugins.interview import Question
 
 
 def init():
     Problem()
-    Question()
+    # Question()
 
 
 thread = threading.Thread(target=init)
